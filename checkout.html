@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -29,6 +30,7 @@
 
 </nav>
 
+
 <section class="products">
 
     <h2>Checkout</h2>
@@ -39,23 +41,122 @@
 
         <div id="order-summary"></div>
 
-        <input
-        type="text"
-        id="fullName"
-        placeholder="Full Name">
+
+        <!-- CUSTOMER DETAILS -->
 
         <input
-        type="text"
-        id="phone"
-        placeholder="Phone Number">
+            type="text"
+            id="fullName"
+            placeholder="Full Name"
+        >
+
+        <input
+            type="text"
+            id="phone"
+            placeholder="Phone Number"
+        >
+
+
+        <!-- DELIVERY AREA -->
+
+        <label for="area">Delivery Area</label>
+
+        <select id="area">
+
+            <option value="">
+                Select your Karachi area
+            </option>
+
+            <option value="DHA">
+                DHA
+            </option>
+
+            <option value="Clifton">
+                Clifton
+            </option>
+
+            <option value="Gulshan-e-Iqbal">
+                Gulshan-e-Iqbal
+            </option>
+
+            <option value="Gulistan-e-Johar">
+                Gulistan-e-Johar
+            </option>
+
+            <option value="PECHS">
+                PECHS
+            </option>
+
+            <option value="Bahadurabad">
+                Bahadurabad
+            </option>
+
+            <option value="North Nazimabad">
+                North Nazimabad
+            </option>
+
+            <option value="Nazimabad">
+                Nazimabad
+            </option>
+
+            <option value="Federal B Area">
+                Federal B Area
+            </option>
+
+            <option value="Saddar">
+                Saddar
+            </option>
+
+            <option value="Korangi">
+                Korangi
+            </option>
+
+            <option value="Malir">
+                Malir
+            </option>
+
+            <option value="Landhi">
+                Landhi
+            </option>
+
+        </select>
+
+
+        <!-- COMPLETE ADDRESS -->
 
         <textarea
-        id="address"
-        placeholder="Delivery Address"></textarea>
+            id="address"
+            placeholder="Complete Delivery Address"
+        ></textarea>
+
+
+        <!-- PRICE SUMMARY -->
+
+        <div id="price-summary">
+
+            <p>
+                Subtotal:
+                <strong>
+                    Rs. <span id="subtotal">0</span>
+                </strong>
+            </p>
+
+            <h3>
+                Total:
+                Rs. <span id="grand-total">0</span>
+            </h3>
+
+        </div>
+
+
+        <!-- PAYMENT BUTTON -->
 
         <button onclick="showPayment()">
             Proceed to Payment
         </button>
+
+
+        <!-- PAYMENT -->
 
         <div id="payment-box" style="display:none;">
 
@@ -63,9 +164,13 @@
 
             <p>Send payment to:</p>
 
-            <p><strong>03200218843</strong></p>
+            <p>
+                <strong>03200218843</strong>
+            </p>
 
-            <p><strong>Account Title:</strong> Amina Arif</p>
+            <p>
+                <strong>Account Title:</strong> Amina Arif
+            </p>
 
             <p>
                 After completing the payment, click the button below
@@ -82,6 +187,7 @@
 
 </section>
 
+
 <footer>
 
     <p>Instagram: @charm.and_chill</p>
@@ -90,130 +196,221 @@
 
 </footer>
 
+
 <script>
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-let summary = document.getElementById("order-summary");
+/* ================================
+   GET CART
+================================ */
 
-let total = 0;
+let cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
+
+let summary =
+    document.getElementById("order-summary");
+
+let subtotal = 0;
 
 
-/* ORDER SUMMARY */
+/* ================================
+   DISPLAY ORDER SUMMARY
+================================ */
 
-if(cart.length === 0){
+if (cart.length === 0) {
 
-    summary.innerHTML = "<p>Your cart is empty.</p>";
+    summary.innerHTML =
+        "<p>Your cart is empty.</p>";
 
-}else{
+} else {
 
     cart.forEach(item => {
 
-        let qty = item.quantity || 1;
+        let qty =
+            item.quantity || 1;
 
-        total += item.price * qty;
+        subtotal +=
+            Number(item.price) * qty;
 
-       summary.innerHTML += `
 
-<div class="checkout-item">
+        summary.innerHTML += `
 
-    <img src="${item.image}" alt="${item.name}">
+        <div class="checkout-item">
 
-    <div class="checkout-details">
+            <img
+                src="${item.image}"
+                alt="${item.name}"
+            >
 
-        <h4>${item.name}</h4>
+            <div class="checkout-details">
 
-   <p>Quantity: ${qty}</p>
+                <h4>${item.name}</h4>
 
-        <p>Rs. ${item.price * qty}</p>
+                <p>
+                    Quantity: ${qty}
+                </p>
 
-    </div>
+                <p>
+                    Rs. ${Number(item.price) * qty}
+                </p>
 
-</div>
+            </div>
 
-`;
+        </div>
+
+        `;
 
     });
-
-    summary.innerHTML += `
-        <h3>Total: Rs. ${total}</h3>
-    `;
 
 }
 
 
-/* SHOW PAYMENT */
+/* ================================
+   UPDATE TOTAL
+================================ */
 
-function showPayment(){
+function updateTotal() {
+
+    document.getElementById("subtotal").textContent =
+        subtotal;
+
+    document.getElementById("grand-total").textContent =
+        subtotal;
+
+}
+
+
+/* ================================
+   SHOW PAYMENT
+================================ */
+
+function showPayment() {
 
     let name =
-    document.getElementById("fullName").value.trim();
+        document.getElementById("fullName").value.trim();
 
     let phone =
-    document.getElementById("phone").value.trim();
+        document.getElementById("phone").value.trim();
+
+    let area =
+        document.getElementById("area").value;
 
     let address =
-    document.getElementById("address").value.trim();
+        document.getElementById("address").value.trim();
 
-    if(name === "" || phone === "" || address === ""){
 
-        alert("Please fill in your Name, Phone Number and Delivery Address.");
+    if (name === "") {
+
+        alert("Please enter your Full Name.");
 
         return;
     }
 
-    document.getElementById("payment-box").style.display = "block";
+
+    if (phone === "") {
+
+        alert("Please enter your Phone Number.");
+
+        return;
+    }
+
+
+    if (area === "") {
+
+        alert("Please select your Karachi Delivery Area.");
+
+        return;
+    }
+
+
+    if (address === "") {
+
+        alert("Please enter your Complete Delivery Address.");
+
+        return;
+    }
+
+
+    document.getElementById("grand-total").textContent =
+        subtotal;
+
+
+    document.getElementById("payment-box").style.display =
+        "block";
+
 }
 
 
-/* SEND TO WHATSAPP */
+/* ================================
+   SEND ORDER TO WHATSAPP
+================================ */
 
-function sendOrder(){
+function sendOrder() {
 
     let name =
-    document.getElementById("fullName").value;
+        document.getElementById("fullName").value;
 
     let phone =
-    document.getElementById("phone").value;
+        document.getElementById("phone").value;
+
+    let area =
+        document.getElementById("area").value;
 
     let address =
-    document.getElementById("address").value;
+        document.getElementById("address").value;
+
 
     let message =
 `Hi! I have completed my payment.
 
 Name: ${name}
 Phone: ${phone}
+
+Delivery Area: ${area}
 Address: ${address}
 
 Order:
 
 `;
 
+
     cart.forEach(item => {
 
-        let qty = item.quantity || 1;
+        let qty =
+            item.quantity || 1;
+
+        let itemTotal =
+            Number(item.price) * qty;
+
 
         message +=
 `• ${item.name} × ${qty}
-Rs. ${item.price * qty}
+Rs. ${itemTotal}
 
 `;
 
     });
 
+
     message +=
-`Total: Rs. ${total}
+`Subtotal: Rs. ${subtotal}
+Total: Rs. ${subtotal}
 
 I have attached my payment screenshot.`;
 
+
     window.open(
+
         "https://wa.me/923200218843?text=" +
         encodeURIComponent(message),
+
         "_blank"
+
     );
 
+
     localStorage.removeItem("cart");
+
 
     alert(
         "Thank you for your order! Please attach your payment screenshot in WhatsApp."
@@ -221,7 +418,15 @@ I have attached my payment screenshot.`;
 
 }
 
+
+/* ================================
+   INITIAL TOTAL
+================================ */
+
+updateTotal();
+
 </script>
 
 </body>
+
 </html>
